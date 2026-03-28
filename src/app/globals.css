@@ -1,26 +1,173 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* ── Typography ── */
+  --font-sans: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Courier New", monospace;
+
+  /* ── Light Theme Colors ── */
+  --color-snow: #FAFAFA;
+  --color-white: #FFFFFF;
+  --color-mist: #F0F1F3;
+  --color-indigo: #4F46E5;
+  --color-indigo-hover: #4338CA;
+  --color-slate: #475569;
+  --color-emerald: #10B981;
+  --color-amber: #F59E0B;
+  --color-rose: #EF4444;
+  --color-orange: #F97316;
+  --color-charcoal: #0F172A;
+  --color-grey: #64748B;
+  --color-subtle: #E2E8F0;
+
+  /* ── Dark Theme Colors ── */
+  --color-void: #09090B;
+  --color-graphite: #18181B;
+  --color-carbon: #27272A;
+  --color-electric: #818CF8;
+  --color-electric-hover: #A5B4FC;
+  --color-neon-emerald: #34D399;
+  --color-chalk: #F4F4F5;
+  --color-ash: #A1A1AA;
+  --color-edge: #3F3F46;
+
+  /* ── Spacing ── */
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+  --spacing-10: 40px;
+  --spacing-12: 48px;
+  --spacing-16: 64px;
+  --spacing-20: 80px;
+  --spacing-24: 96px;
+
+  /* ── Border Radius ── */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  /* ── Shadows ── */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ── Gradients ── */
+:root {
+  --gradient-hero-students: linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #EC4899 100%);
+  --gradient-accent: linear-gradient(90deg, #818CF8 0%, #34D399 100%);
+  --gradient-hero-overlay: linear-gradient(180deg, rgba(9,9,11,0.9) 0%, rgba(9,9,11,0.4) 100%);
+  --gradient-hero-parents: linear-gradient(180deg, #EEF2FF 0%, #FAFAFA 100%);
+}
+
+/* ── Easing ── */
+:root {
+  --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Animations ── */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@keyframes scale-in {
+  from { transform: scale(0); }
+  to { transform: scale(1); }
+}
+
+@keyframes stroke-fill {
+  from { stroke-dashoffset: 283; }
+}
+
+@keyframes schedule-shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.schedule-shimmer {
+  background-size: 200% 100%;
+  background-image:
+    linear-gradient(
+      110deg,
+      transparent 25%,
+      rgba(255,255,255,0.06) 37%,
+      transparent 50%
+    );
+  animation: schedule-shimmer 3s ease-in-out infinite;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 600ms var(--ease-default) both;
+}
+
+.animate-fade-in-up-delay-1 {
+  animation: fade-in-up 600ms var(--ease-default) 100ms both;
+}
+
+.animate-fade-in-up-delay-2 {
+  animation: fade-in-up 600ms var(--ease-default) 200ms both;
+}
+
+.animate-fade-in-up-delay-3 {
+  animation: fade-in-up 600ms var(--ease-default) 300ms both;
+}
+
+.animate-scale-in {
+  animation: scale-in 200ms var(--ease-default) both;
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── Focus ── */
+*:focus-visible {
+  outline: 2px solid #4F46E5;
+  outline-offset: 2px;
+}
+
+[data-theme="dark"] *:focus-visible {
+  outline-color: #818CF8;
+}
+
+/* ── Smooth scrolling ── */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px;
+}
+
+/* ── Selection ── */
+::selection {
+  background: rgba(79, 70, 229, 0.2);
+  color: inherit;
+}
+
+[data-theme="dark"] ::selection {
+  background: rgba(129, 140, 248, 0.3);
+}
+
+/* ── Scrollbar hide utility ── */
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
 }

@@ -7,6 +7,23 @@ export const metadata: Metadata = {
   title: "Для родителей — Георгий Новицкий | Репетитор ЕГЭ/ОГЭ",
   description:
     "Системный подход к подготовке к ЕГЭ и ОГЭ по математике. Прозрачные результаты, отчёты после каждого занятия. Обсудите план подготовки.",
+  openGraph: {
+    title: "Для родителей — Георгий Новицкий | Репетитор ЕГЭ/ОГЭ",
+    description: "Прозрачные результаты, отчёты после каждого занятия. Спокойствие для родителей, высокие баллы для детей.",
+    type: "website",
+    locale: "ru_RU",
+  }
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "Для родителей — Георгий Новицкий | Репетитор ЕГЭ/ОГЭ",
+  "description": "Как мы готовим к ЕГЭ и ОГЭ по математике: системный подход, отчетность, гарантии качества.",
+  "about": {
+    "@type": "EducationalOrganization",
+    "name": "Георгий Новицкий — Репетитор по математике"
+  }
 };
 
 const painCards = [
@@ -111,6 +128,10 @@ const stats = [
 export default function ParentsPage() {
   return (
     <div className="bg-snow text-charcoal" data-theme="light">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Header theme="light" />
 
       <main>

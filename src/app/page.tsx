@@ -9,6 +9,31 @@ export const metadata: Metadata = {
   title: "Георгий Новицкий | Репетитор ЕГЭ/ОГЭ",
   description:
     "Подготовка к ЕГЭ и ОГЭ по математике для школьников. Системно, понятно, без занудства. Запишись на первое занятие.",
+  openGraph: {
+    title: "Георгий Новицкий | Репетитор ЕГЭ/ОГЭ",
+    description: "Подготовка к ЕГЭ и ОГЭ по математике. Понятно, системно и на высокий балл.",
+    type: "website",
+    locale: "ru_RU",
+  }
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "EducationalOrganization",
+  "name": "Георгий Новицкий — Репетитор по математике",
+  "description": "Подготовка к ЕГЭ и ОГЭ по математике для школьников.",
+  "founder": {
+    "@type": "Person",
+    "name": "Георгий Новицкий",
+    "jobTitle": "Репетитор по математике"
+  },
+  "makesOffer": {
+    "@type": "Offer",
+    "itemOffered": {
+      "@type": "Service",
+      "name": "Подготовка к ЕГЭ и ОГЭ по математике"
+    }
+  }
 };
 
 const painCards = [
@@ -53,6 +78,10 @@ const steps = [
 export default function StudentsPage() {
   return (
     <div className="bg-void text-chalk" data-theme="dark">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <Header theme="dark" />
 
       <main>

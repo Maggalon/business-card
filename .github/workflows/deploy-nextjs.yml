@@ -56,7 +56,7 @@ jobs:
             docker run -d \
               --name business-card \
               --restart unless-stopped \
-              -p 127.0.0.1:3000:443 \
+              -p 127.0.0.1:3000:3000 \
               notbegula1/business-card:latest
             
             # 5. Clean up old unused images to save VPS disk space

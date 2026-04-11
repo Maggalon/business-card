@@ -1,0 +1,63 @@
+name: Deploy Next.js to VPS
+
+on:
+  push:
+    branches:
+      - main # Or 'master', depending on your default branch
+
+jobs:
+  build-and-push:
+    name: Build and Push to Docker Hub
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: notbegula1/business-card:latest
+          cache-from: type=registry,ref=notbegula1/business-card:buildcache
+          cache-to: type=registry,ref=notbegula1/business-card:buildcache,mode=max
+
+  deploy-to-vps:
+    name: Deploy to Ubuntu VPS
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Execute deployment commands via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USERNAME }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            # 1. Pull the latest image
+            docker pull notbegula1/business-card:latest
+            
+            # 2. Stop the currently running container (ignore error if it doesn't exist)
+            docker stop nextjs-app || true
+            
+            # 3. Remove the old container
+            docker rm nextjs-app || true
+            
+            # 4. Run the new container (Adjust port 3000 if needed)
+            docker run -d \
+              --name nextjs-app \
+              --restart unless-stopped \
+              -p 443:443 \
+              notbegula1/business-card:latest
+            
+            # 5. Clean up old unused images to save VPS disk space
+            docker image prune -a -f --filter "until=24h"

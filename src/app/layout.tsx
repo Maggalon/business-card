@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import { YandexMetrika } from "@/components/yandex-metrika";
 
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
@@ -43,7 +44,10 @@ export default function RootLayout({
       lang="ru"
       className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}
     >
-      <body className="min-h-screen font-sans">{children}</body>
+      <body className="min-h-screen font-sans">
+        {children}
+        <YandexMetrika />
+      </body>
     </html>
   );
 }

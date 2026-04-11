@@ -47,14 +47,14 @@ jobs:
             docker pull notbegula1/business-card:latest
             
             # 2. Stop the currently running container (ignore error if it doesn't exist)
-            docker stop nextjs-app || true
+            docker stop business-card || true
             
             # 3. Remove the old container
-            docker rm nextjs-app || true
+            docker rm business-card || true
             
             # 4. Run the new container (Adjust port 3000 if needed)
             docker run -d \
-              --name nextjs-app \
+              --name business-card \
               --restart unless-stopped \
               -p 443:443 \
               notbegula1/business-card:latest

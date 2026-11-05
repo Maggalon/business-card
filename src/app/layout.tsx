@@ -1,52 +1,59 @@
 import type { Metadata } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
+import { person } from "@/content/cv";
 import "./globals.css";
-import { YandexMetrika } from "@/components/yandex-metrika";
 
-const inter = Inter({
+const geist = Geist({
   subsets: ["latin", "cyrillic"],
-  variable: "--font-inter",
+  variable: "--font-geist",
 });
 
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-jetbrains",
-  weight: ["400"],
+const geistMono = Geist_Mono({
+  subsets: ["latin", "cyrillic"],
+  variable: "--font-geist-mono",
 });
+
+const title = `${person.name}, кандидат в продажи инженерного оборудования`;
+const description =
+  "Ищу первую работу в продажах инженерного оборудования. Внедрение 1С:ERP у поставщика трубопроводной арматуры, больше 4 лет репетиторства по математике и физике, ДВФУ.";
 
 export const metadata: Metadata = {
-  title: "Георгий Новицкий — Репетитор по математике | ЕГЭ и ОГЭ",
-  description:
-    "Подготовка к ЕГЭ и ОГЭ по математике с Георгием Новицким. Системный подход, прозрачные результаты, индивидуальный план. Записывайтесь на диагностику.",
   metadataBase: new URL("https://goshanov.ru"),
+  title,
+  description,
   openGraph: {
-    title: "Георгий Новицкий — Репетитор по математике",
-    description: "Прокачаем математику вместе. Подготовка к ЕГЭ и ОГЭ с прозрачными результатами.",
+    title,
+    description,
     url: "/",
-    siteName: "Георгий Новицкий",
+    siteName: person.name,
     locale: "ru_RU",
-    type: "website",
+    type: "profile",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Георгий Новицкий — Репетитор по математике",
-    description: "Системный подход к подготовке к ЕГЭ и ОГЭ.",
-  }
+    title,
+    description,
+  },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html
       lang="ru"
-      className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}
+      data-scroll-behavior="smooth"
+      className={`${geist.variable} ${geistMono.variable} antialiased`}
     >
       <body className="min-h-screen font-sans">
+        <noscript>
+          <style>{`.reveal{opacity:1;transform:none}.word{opacity:1}`}</style>
+        </noscript>
+        <a
+          href="#main"
+          className="button-sm fixed top-2 left-2 z-[60] -translate-y-24 rounded-lg bg-accent px-3 py-2 text-surface transition-transform duration-300 ease-base focus-visible:translate-y-0"
+        >
+          Перейти к содержанию
+        </a>
         {children}
-        <YandexMetrika />
       </body>
     </html>
   );

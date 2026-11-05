@@ -1,299 +1,409 @@
-import type { Metadata } from "next";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import ScheduleGrid from "@/components/ScheduleGrid";
-import Link from "next/link";
+import {
+  Calculator,
+  CaretDown,
+  ChalkboardTeacher,
+  ChatsCircle,
+  EnvelopeSimple,
+  Factory,
+  MapPin,
+  Phone,
+  SealCheck,
+} from "@phosphor-icons/react/dist/ssr";
 import Image from "next/image";
+import Footer from "@/components/Footer";
+import Reveal from "@/components/Reveal";
+import SiteNav from "@/components/SiteNav";
+import TaglineReveal from "@/components/TaglineReveal";
+import {
+  caseStudy,
+  experience,
+  faq,
+  finalCta,
+  hero,
+  method,
+  person,
+  plan,
+  primaryCta,
+  reasons,
+  riskReversal,
+  skills,
+  tagline,
+} from "@/content/cv";
 
-export const metadata: Metadata = {
-  title: "Георгий Новицкий | Репетитор ЕГЭ/ОГЭ",
-  description:
-    "Подготовка к ЕГЭ и ОГЭ по математике для школьников. Системно, понятно, без занудства. Запишись на первое занятие.",
-  openGraph: {
-    title: "Георгий Новицкий | Репетитор ЕГЭ/ОГЭ",
-    description: "Подготовка к ЕГЭ и ОГЭ по математике. Понятно, системно и на высокий балл.",
-    type: "website",
-    locale: "ru_RU",
-  }
+const reasonIcons = {
+  factory: Factory,
+  teacher: ChalkboardTeacher,
+  calculator: Calculator,
+  chat: ChatsCircle,
 };
 
 const jsonLd = {
   "@context": "https://schema.org",
-  "@type": "EducationalOrganization",
-  "name": "Георгий Новицкий — Репетитор по математике",
-  "description": "Подготовка к ЕГЭ и ОГЭ по математике для школьников.",
-  "founder": {
-    "@type": "Person",
-    "name": "Георгий Новицкий",
-    "jobTitle": "Репетитор по математике"
-  },
-  "makesOffer": {
-    "@type": "Offer",
-    "itemOffered": {
-      "@type": "Service",
-      "name": "Подготовка к ЕГЭ и ОГЭ по математике"
-    }
-  }
+  "@graph": [
+    {
+      "@type": "Person",
+      name: person.name,
+      jobTitle: person.role,
+      email: person.email,
+      address: { "@type": "PostalAddress", addressLocality: person.location },
+      alumniOf: "Дальневосточный федеральный университет",
+    },
+    {
+      "@type": "FAQPage",
+      mainEntity: faq.map((item) => ({
+        "@type": "Question",
+        name: item.question,
+        acceptedAnswer: { "@type": "Answer", text: item.answer },
+      })),
+    },
+  ],
 };
 
-const painCards = [
-  {
-    emoji: "😴",
-    title: "«На уроках — тоска, а в голове — тишина»",
-    text: "Учитель говорит с доской, а не с тобой. Формулы летят мимо, и ты уже даже не пытаешься вникнуть. Проблема не в тебе — проблема в подаче.",
-  },
-  {
-    emoji: "😱",
-    title: "«Вторая часть экзамена? Нет, спасибо, я пас»",
-    text: "Первая часть вроде ок, а потом открываешь задания с развёрнутым ответом — и будто другой экзамен. Параметры, неравенства, геометрия… Без паники — это разбирается по шагам.",
-  },
-  {
-    emoji: "⏰",
-    title: "«До экзамена осталось... ой»",
-    text: "Кажется, что поздно начинать. Спойлер: нет. Даже за 3-4 месяца можно вытянуть балл на 20-30 пунктов, если заниматься с головой, а не с тревогой.",
-  },
-];
-
-const steps = [
-  {
-    num: "01",
-    title: "Диагностика",
-    subtitle: "Находим, где пробелы",
-    text: "На первом занятии определяем твой реальный уровень: что знаешь, что подзабыл, а что нужно выучить с нуля. Без оценок и осуждения — просто честная точка А.",
-  },
-  {
-    num: "02",
-    title: "Прокачка",
-    subtitle: "Разбираем, тренируем, закрепляем",
-    text: "Каждая тема — на понятных примерах и с объяснением «почему», а не «потому что так надо». Решаем задачи в формате экзамена, чтобы на ЕГЭ ты не увидел ничего нового.",
-  },
-  {
-    num: "03",
-    title: "Уверенность",
-    subtitle: "Выходишь на экзамен — и не трясёшься",
-    text: "К концу подготовки ты знаешь свои сильные стороны, не боишься второй части и умеешь распределять время. Это не магия — это система.",
-  },
-];
-
-export default function StudentsPage() {
+function SectionHeading({ eyebrow, id, title }: { eyebrow: string; id: string; title: string }) {
   return (
-    <div className="bg-void text-chalk" data-theme="dark">
+    <div className="max-w-[680px]">
+      <p className="caption-3 text-accent">{eyebrow}</p>
+      <h2 id={id} className="heading-4 mt-2 md:heading-3">
+        {title}
+      </h2>
+    </div>
+  );
+}
+
+function PrimaryCta() {
+  return (
+    <a href={primaryCta.href} className="cta button-md">
+      <EnvelopeSimple size={20} weight="bold" aria-hidden="true" />
+      {primaryCta.label}
+    </a>
+  );
+}
+
+export default function Home() {
+  return (
+    <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+        }}
       />
-      <Header theme="dark" />
+      <SiteNav />
 
-      <main>
-        {/* ── Hero ── */}
-        <section
-          className="relative overflow-hidden"
-          aria-labelledby="hero-heading"
-        >
-          {/* Right side background image */}
-          <div
-            className="absolute inset-y-0 right-0 w-full lg:w-[55%] opacity-40 md:opacity-50 lg:opacity-100 bg-cover bg-center bg-no-repeat z-0"
-            style={{ backgroundImage: "url('/image-stud.png')" }}
-            aria-hidden="true"
+      <main id="main">
+        {/* Hero */}
+        <section id="top" aria-labelledby="hero-heading" className="relative overflow-hidden px-4 pt-24 md:pt-32">
+          <Image
+            src="/scene-hero.webp"
+            alt=""
+            width={3200}
+            height={900}
+            priority
+            unoptimized
+            className="absolute inset-x-0 bottom-0 h-96 w-full object-cover object-bottom md:h-[480px]"
           />
-          {/* Gradient overlay to blend image into the background */}
-          <div
-            className="absolute inset-y-0 right-0 w-full lg:w-[55%] bg-void/50 md:bg-void/40 lg:bg-transparent lg:bg-gradient-to-r lg:from-void lg:via-void/70 lg:to-transparent z-0"
-            aria-hidden="true"
-          />
-
-          <div className="relative z-10 mx-auto max-w-[1200px] px-4 md:px-6 lg:px-8 py-20 md:py-28 lg:py-36">
-            <div className="max-w-2xl">
-              <p className="animate-fade-in-up text-xs md:text-[13px] font-semibold uppercase tracking-[0.08em] text-electric mb-4 md:mb-6">
-                ЕГЭ и ОГЭ по математике
-              </p>
+          <div className="relative mx-auto grid max-w-6xl items-end gap-12 lg:grid-cols-12">
+            <div className="lg:col-span-7 lg:self-center lg:pb-24">
+              <p className="rise caption-1 text-balance text-accent">{person.role}</p>
               <h1
                 id="hero-heading"
-                className="animate-fade-in-up-delay-1 text-4xl md:text-[44px] lg:text-[56px] font-extrabold leading-[1.1] tracking-[-0.02em] text-chalk"
+                style={{ animationDelay: "80ms" }}
+                className="rise hero-heading heading-3 mt-4 max-w-[680px] md:heading-2 xl:heading-1"
               >
-                Математика — это не приговор.{" "}
-                Это навык, который мы {" "}
-                <span className="bg-clip-text text-transparent" style={{ backgroundImage: "var(--gradient-accent)" }}>
-                  прокачаем
-                </span>{" "}
-                вместе.
+                {hero.lines.map((line) => (
+                  <span key={line} className="sm:block">
+                    {line}{" "}
+                  </span>
+                ))}
               </h1>
-              <p className="animate-fade-in-up-delay-2 mt-6 text-lg md:text-xl text-ash leading-relaxed">
-                Готовлю к ЕГЭ и ОГЭ по математике так, чтобы ты реально понимал, а не зубрил формулы в панике за неделю до экзамена. Системно. Понятно. Без занудства.
+              <p
+                style={{ animationDelay: "160ms" }}
+                className="rise body-3 mt-6 max-w-[680px] text-muted"
+              >
+                {hero.subheading}
               </p>
-              <div className="animate-fade-in-up-delay-3 mt-8 md:mt-10 flex flex-col sm:flex-row gap-4">
-                <a
-                  href="https://t.me/maggalon"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex h-13 md:h-14 items-center justify-center px-8 rounded-md bg-electric text-void text-base md:text-lg font-semibold transition-all duration-200 hover:bg-electric-hover hover:-translate-y-px hover:shadow-lg hover:shadow-electric/20"
-                >
-                  Записаться на занятие
-                </a>
-                <Link
-                  href="/calculator"
-                  className="inline-flex h-13 md:h-14 items-center justify-center px-8 rounded-md border-[1.5px] border-electric text-electric text-base md:text-lg font-medium transition-all duration-200 hover:bg-electric/[0.06]"
-                >
-                  Узнать свой балл →
-                </Link>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── Pain Points ── */}
-        <section
-          className="bg-graphite py-16 md:py-20 lg:py-24"
-          aria-labelledby="pain-heading"
-        >
-          <div className="mx-auto max-w-[1200px] px-4 md:px-6 lg:px-8">
-            <p className="text-xs md:text-[13px] font-semibold uppercase tracking-[0.08em] text-electric mb-3">
-              Знакомо?
-            </p>
-            <h2
-              id="pain-heading"
-              className="sr-only"
-            >
-              Знакомые ситуации
-            </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-              {painCards.map((card, i) => (
-                <article
-                  key={i}
-                  className="group rounded-2xl border border-edge bg-void p-5 md:p-6 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md hover:border-electric"
-                >
-                  <span className="text-2xl mb-4 block" aria-hidden="true">
-                    {card.emoji}
-                  </span>
-                  <h3 className="text-lg md:text-[22px] font-bold text-chalk leading-tight mb-3">
-                    {card.title}
-                  </h3>
-                  <p className="text-sm md:text-base text-ash leading-relaxed">
-                    {card.text}
-                  </p>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── How It Works ── */}
-        <section
-          className="bg-void py-16 md:py-20 lg:py-24"
-          aria-labelledby="steps-heading"
-        >
-          <div className="mx-auto max-w-[1200px] px-4 md:px-6 lg:px-8">
-            <p className="text-xs md:text-[13px] font-semibold uppercase tracking-[0.08em] text-electric mb-3">
-              Как проходят занятия
-            </p>
-            <h2
-              id="steps-heading"
-              className="text-2xl md:text-[34px] lg:text-[40px] font-bold text-chalk leading-tight tracking-[-0.015em] max-w-2xl"
-            >
-              Три шага от «ничего не понимаю» до «а чё тут сложного?»
-            </h2>
-
-            <div className="mt-10 md:mt-14 grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10">
-              {steps.map((step, i) => (
-                <div key={i} className="relative">
-                  {/* Timeline connector (desktop) */}
-                  {/* {i < steps.length - 1 && (
-                    <div
-                      className="hidden lg:block absolute top-8 left-full w-full h-px bg-edge -translate-x-5"
-                      aria-hidden="true"
-                    />
-                  )} */}
-                  <span
-                    className="inline-flex items-center justify-center h-10 w-10 rounded-lg bg-electric/10 text-electric text-sm font-bold font-mono mb-4"
-                    aria-hidden="true"
-                  >
-                    {step.num}
-                  </span>
-                  <h3 className="text-xl md:text-[22px] font-bold text-chalk mb-1">
-                    {step.title}
-                  </h3>
-                  <p className="text-sm font-medium text-electric mb-3">
-                    {step.subtitle}
-                  </p>
-                  <p className="text-sm md:text-base text-ash leading-relaxed">
-                    {step.text}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ── Testimonial ── */}
-        <section
-          className="bg-graphite py-16 md:py-20 lg:py-24"
-          aria-labelledby="testimonial-heading"
-        >
-          <div className="mx-auto max-w-[1200px] px-4 md:px-6 lg:px-8">
-            <p className="text-xs md:text-[13px] font-semibold uppercase tracking-[0.08em] text-electric mb-6">
-              Те, кто уже сдал
-            </p>
-            <h2 id="testimonial-heading" className="sr-only">
-              Отзывы учеников
-            </h2>
-
-            <blockquote className="relative max-w-3xl">
-              <div className="absolute -top-4 -left-2 text-6xl text-electric/20 font-serif leading-none" aria-hidden="true">
-                &ldquo;
-              </div>
-              <p className="text-lg md:text-xl text-chalk/90 leading-relaxed italic pl-6 border-l-2 border-electric/30">
-                Пришла к Георгию за полгода до экзамена с твёрдыми 55 баллами по пробнику. Думала, что вторая часть — это не моё. Оказалось — моё, просто мне никто нормально не объяснял. На занятиях реально понятно: без воды, без «ты должна сама разобраться». Сдала на 82, поступила на бюджет. Лучшая инвестиция в мой 11 класс.
-              </p>
-              <footer className="mt-6 pl-6">
-                <p className="text-base font-semibold text-chalk">Даша, 11 класс</p>
-                <p className="text-sm text-neon-emerald font-mono font-medium">
-                  82 балла ЕГЭ → бюджет в СПБГУ
+              <div
+                style={{ animationDelay: "240ms" }}
+                className="rise mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center"
+              >
+                <PrimaryCta />
+                <p className="caption-1 flex items-center gap-2 text-muted">
+                  <SealCheck size={16} weight="fill" className="shrink-0 text-accent" aria-hidden="true" />
+                  {hero.proof}
                 </p>
-              </footer>
-            </blockquote>
+              </div>
+            </div>
+            <div style={{ animationDelay: "320ms" }} className="rise mx-auto w-full max-w-sm lg:col-span-5 lg:max-w-none">
+              <Image
+                src="/portrait-engraved.webp"
+                alt={`${person.name}, портрет`}
+                width={928}
+                height={1298}
+                priority
+                unoptimized
+                className="block h-auto w-full"
+              />
+            </div>
           </div>
         </section>
 
-        {/* ── Schedule Grid ── */}
-        <ScheduleGrid theme="dark" />
+        {/* Why hire me */}
+        <section id="why" aria-labelledby="why-heading" className="bg-band px-4 py-16 md:py-24">
+          <div className="mx-auto max-w-6xl">
+            <Reveal>
+              <SectionHeading
+                eyebrow="Почему я"
+                id="why-heading"
+                title="Что вы получаете, нанимая меня"
+              />
+            </Reveal>
+            <div className="mt-12 grid gap-6 md:grid-cols-2">
+              {reasons.map((reason) => {
+                const Icon = reasonIcons[reason.icon];
+                return (
+                  <Reveal key={reason.title}>
+                    <article className="h-full rounded-2xl border border-line bg-surface p-6">
+                      <Icon size={24} className="text-accent" aria-hidden="true" />
+                      <h3 className="heading-6 mt-4">{reason.title}</h3>
+                      <p className="body-3 mt-2 text-muted">{reason.text}</p>
+                    </article>
+                  </Reveal>
+                );
+              })}
+            </div>
+          </div>
+        </section>
 
-        {/* ── Final CTA ── */}
-        <section
-          id="cta"
-          className="relative overflow-hidden py-16 md:py-20 lg:py-24"
-          aria-labelledby="cta-heading"
-        >
-          <div
-            className="absolute inset-0 opacity-30"
-            style={{ background: "var(--gradient-hero-students)" }}
-            aria-hidden="true"
-          />
-          <div className="absolute inset-0 bg-void/60" aria-hidden="true" />
+        {/* Tagline */}
+        <section aria-label="Главная мысль" className="bg-accent px-4 py-24 text-surface">
+          <div className="mx-auto max-w-6xl">
+            <TaglineReveal lines={tagline} />
+          </div>
+        </section>
 
-          <div className="relative mx-auto max-w-[1200px] px-4 md:px-6 lg:px-8 text-center">
-            <h2
-              id="cta-heading"
-              className="text-2xl md:text-[34px] lg:text-[40px] font-bold text-chalk leading-tight tracking-[-0.015em] max-w-2xl mx-auto"
-            >
-              Экзамен сам себя не сдаст. Но мы к нему подготовимся.
-            </h2>
-            <p className="mt-4 text-base md:text-lg text-ash max-w-xl mx-auto">
-              Запишись на первое занятие — разберёмся, где ты сейчас и сколько баллов можно набрать.
-            </p>
-            <a
-              href="https://t.me/maggalon"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex h-13 md:h-14 items-center justify-center px-8 md:px-10 rounded-md bg-electric text-void text-base md:text-lg font-semibold transition-all duration-200 hover:bg-electric-hover hover:-translate-y-px hover:shadow-lg hover:shadow-electric/20 mt-8"
-            >
-              Записаться на первое занятие
-            </a>
+        {/* Case */}
+        <section id="case" aria-labelledby="case-heading" className="bg-band px-4 py-16 md:py-24">
+          <div className="mx-auto max-w-6xl">
+            <Reveal>
+              <SectionHeading eyebrow="Кейс" id="case-heading" title={caseStudy.title} />
+              <p className="body-3 mt-4 max-w-[680px] text-muted">{caseStudy.summary}</p>
+            </Reveal>
+            <div className="mt-12 grid gap-6 lg:grid-cols-12">
+              <Reveal className="lg:col-span-7">
+                <dl className="flex h-full flex-col justify-between gap-4 rounded-2xl border border-line bg-surface p-6 md:p-8">
+                  {caseStudy.facts.map((fact) => (
+                    <div key={fact.label} className="grid gap-1 sm:grid-cols-3 sm:gap-4">
+                      <dt className="body-6 text-muted">{fact.label}</dt>
+                      <dd className="title-3 sm:col-span-2">{fact.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </Reveal>
+              <Reveal className="lg:col-span-5">
+                <div className="flex h-full flex-col gap-6 rounded-2xl border border-line bg-surface p-6 md:p-8">
+                  <h3 className="caption-3 text-accent">Что это даёт вам</h3>
+                  {caseStudy.takeaways.map((takeaway) => (
+                    <div key={takeaway.title}>
+                      <h4 className="title-3">{takeaway.title}</h4>
+                      <p className="body-6 mt-1 text-muted">{takeaway.text}</p>
+                    </div>
+                  ))}
+                </div>
+              </Reveal>
+            </div>
+          </div>
+        </section>
+
+        {/* Experience and education */}
+        <section id="experience" aria-labelledby="experience-heading" className="px-4 py-16 md:py-24">
+          <div className="mx-auto max-w-6xl">
+            <Reveal>
+              <SectionHeading
+                eyebrow="Опыт и образование"
+                id="experience-heading"
+                title="На что я опираюсь"
+              />
+            </Reveal>
+            <ol className="mt-12 flex flex-col gap-6">
+              {experience.map((item) => (
+                <li key={item.company}>
+                  <Reveal>
+                    <article className="grid gap-6 rounded-2xl border border-line bg-surface p-6 md:grid-cols-12 md:p-8">
+                      <div className="md:col-span-4">
+                        <h3 className="heading-6">{item.company}</h3>
+                        <p className="caption-1 mt-1 text-muted">{item.period}</p>
+                      </div>
+                      <div className="md:col-span-8">
+                        <p className="title-2">{item.role}</p>
+                        <ul className="mt-4 flex flex-col gap-2">
+                          {item.points.map((point) => (
+                            <li key={point} className="body-3 flex gap-3 text-muted">
+                              <span
+                                aria-hidden="true"
+                                className="mt-3 size-1 shrink-0 rounded-full bg-accent"
+                              />
+                              <span>{point}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </article>
+                  </Reveal>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
+        {/* How I work */}
+        <section id="method" aria-labelledby="method-heading" className="bg-band px-4 py-16 md:py-24">
+          <div className="mx-auto max-w-6xl">
+            <Reveal>
+              <SectionHeading
+                eyebrow="Как я работаю"
+                id="method-heading"
+                title="Что перенесу в продажи из внедрения и преподавания"
+              />
+            </Reveal>
+            <ol className="mt-12 grid gap-12 md:grid-cols-3 md:gap-8">
+              {method.map((step, index) => (
+                <li key={step.title}>
+                  <Reveal>
+                    <p aria-hidden="true" className="font-mono text-sm font-medium text-accent">
+                      0{index + 1}
+                    </p>
+                    <h3 className="heading-6 mt-4">{step.title}</h3>
+                    <p className="body-3 mt-2 text-muted">{step.text}</p>
+                  </Reveal>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
+        {/* First 90 days */}
+        <section id="plan" aria-labelledby="plan-heading" className="px-4 py-16 md:py-24">
+          <div className="mx-auto max-w-6xl">
+            <Reveal>
+              <SectionHeading
+                eyebrow="План"
+                id="plan-heading"
+                title={"Мои первые 90 дней у вас"}
+              />
+            </Reveal>
+            <div className="mt-12 grid gap-6 lg:grid-cols-3">
+              {plan.map((stage) => (
+                <Reveal key={stage.title}>
+                  <article className="flex h-full flex-col rounded-2xl border border-line bg-surface p-6">
+                    <p className="caption-3 text-muted">{stage.period}</p>
+                    <p className="mt-2 font-mono text-2xl font-medium text-accent">{stage.value}</p>
+                    <h3 className="heading-6 mt-4">{stage.title}</h3>
+                    <p className="body-3 mt-2 text-muted">{stage.outcome}</p>
+                  </article>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Skills */}
+        <section aria-labelledby="skills-heading" className="bg-band px-4 py-16 md:py-24">
+          <div className="mx-auto max-w-6xl">
+            <Reveal>
+              <SectionHeading eyebrow="Навыки" id="skills-heading" title="Что я умею уже сейчас" />
+            </Reveal>
+            <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              {skills.map((group) => (
+                <Reveal key={group.title}>
+                  <h3 className="title-3">{group.title}</h3>
+                  <ul className="mt-4 flex flex-col gap-2">
+                    {group.items.map((item) => (
+                      <li key={item} className="body-6 text-muted">
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* FAQ */}
+        <section id="faq" aria-labelledby="faq-heading" className="px-4 py-16 md:py-24">
+          <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-12">
+            <Reveal className="lg:col-span-4">
+              <SectionHeading
+                eyebrow="Вопросы"
+                id="faq-heading"
+                title="Что вы, скорее всего, хотите спросить"
+              />
+            </Reveal>
+            <Reveal className="flex flex-col gap-2 lg:col-span-8">
+              {faq.map((item) => (
+                <details key={item.question} className="group rounded-2xl border border-line bg-surface">
+                  <summary className="title-3 flex cursor-pointer list-none items-center justify-between gap-4 rounded-2xl p-4 transition-colors duration-300 ease-base hover:bg-raised [&::-webkit-details-marker]:hidden">
+                    {item.question}
+                    <CaretDown
+                      size={16}
+                      aria-hidden="true"
+                      className="shrink-0 text-muted transition-transform duration-500 ease-base group-open:rotate-180"
+                    />
+                  </summary>
+                  <p className="body-3 px-4 pb-4 text-muted">{item.answer}</p>
+                </details>
+              ))}
+            </Reveal>
+          </div>
+        </section>
+
+        {/* Risk reversal and final CTA */}
+        <section id="contact" aria-labelledby="contact-heading" className="bg-band px-4 py-16 md:py-24">
+          <div className="mx-auto max-w-6xl">
+            <Reveal className="rounded-2xl border border-line bg-surface p-6 md:p-8">
+              <SealCheck size={24} className="text-accent" aria-hidden="true" />
+              <h2 className="heading-6 mt-4 max-w-[680px]">{riskReversal.title}</h2>
+              <p className="body-3 mt-2 max-w-[680px] text-muted">{riskReversal.text}</p>
+            </Reveal>
+
+            <Reveal className="mt-16 md:mt-24">
+              <h2 id="contact-heading" className="heading-4 max-w-[680px] md:heading-3">
+                {finalCta.title}
+              </h2>
+              <p className="body-3 mt-4 max-w-[680px] text-muted">{finalCta.text}</p>
+              <div className="mt-8">
+                <PrimaryCta />
+              </div>
+              <ul className="caption-1 mt-8 flex flex-col gap-4 text-muted md:flex-row md:gap-8">
+                <li>
+                  <a
+                    href={`mailto:${person.email}`}
+                    className="flex items-center gap-2 rounded-lg transition-colors duration-300 ease-base hover:text-ink"
+                  >
+                    <EnvelopeSimple size={16} aria-hidden="true" className="shrink-0" />
+                    <span className="min-w-0 break-all">{person.email}</span>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={person.phoneHref}
+                    className="flex items-center gap-2 rounded-lg transition-colors duration-300 ease-base hover:text-ink"
+                  >
+                    <Phone size={16} aria-hidden="true" className="shrink-0" />
+                    {person.phone}
+                  </a>
+                </li>
+                <li className="flex items-center gap-2">
+                  <MapPin size={16} aria-hidden="true" className="shrink-0" />
+                  {person.location}
+                </li>
+              </ul>
+            </Reveal>
           </div>
         </section>
       </main>
 
-      <Footer theme="dark" />
-    </div>
+      <Footer />
+    </>
   );
 }
